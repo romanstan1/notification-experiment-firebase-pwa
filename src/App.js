@@ -20,10 +20,11 @@ class App extends Component {
   }
 
   componentWillMount() {
-    const todayS = moment().add(0,'days').format();
-    const tomorrowS = moment().add(1,'days').format()
-    this.today = moment(todayS)
-    this.tomorrow = moment(tomorrowS)
+    const time1 = moment().add(0,'days').format()
+    const time2 = moment().add(0,'days').format()
+
+    this.today = moment(time1).startOf('hour')
+    this.tomorrow = moment(time2).endOf('hour')
 
     firebase.initializeApp(config);
     const dbRef = firebase.database().ref('appointments/')
@@ -69,9 +70,6 @@ class App extends Component {
   }
 
   render() {
-    const bool = moment().isBetween(this.today,this.tomorrow)
-
-    console.log("bool",bool)
     return (
       <div className="App">
         {this.state.appointments.map((appointment, i) =>
