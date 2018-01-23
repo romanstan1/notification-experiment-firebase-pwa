@@ -1,8 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const uuidv1 = require('uuid/v1');
 admin.initializeApp(functions.config().firebase);
-import uuidv1 from 'uuid/v1';
-
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
   response.send("Hello from Firebase!");
