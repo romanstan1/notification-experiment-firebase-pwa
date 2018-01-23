@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import * as firebase from 'firebase';
 import _ from 'lodash'
+import moment from 'moment'
 
 var config = {
   apiKey: process.env.FIREBASE_API_KEY_NOTIFICATION_EXPERIMENT,
@@ -19,7 +20,11 @@ class App extends Component {
   }
 
   componentWillMount() {
-    console.log("will mount")
+    const todayS = moment().add(0,'days').format();
+    const tomorrowS = moment().add(1,'days').format()
+    this.today = moment(todayS)
+    this.tomorrow = moment(tomorrowS)
+
     firebase.initializeApp(config);
     const dbRef = firebase.database().ref('appointments/')
     dbRef.on('value', (snapshot) => {
@@ -38,8 +43,7 @@ class App extends Component {
     const appointRef = db.ref('appointments/')
     const newAppointmentRef = appointRef.push();
     newAppointmentRef.set({
-      date: "27/01/2018",
-      time: "13.45",
+      date: moment().format(),
       location: this.state.input,
       address: "38 The Broadway, Wimbledon, London SW19 1RQ, UK",
       postcode: "SW209BT",
@@ -65,13 +69,18 @@ class App extends Component {
   }
 
   render() {
+    const bool = moment().isBetween(this.today,this.tomorrow)
+
+    console.log("bool",bool)
     return (
       <div className="App">
         {this.state.appointments.map((appointment, i) =>
           <div className='appointment' key={i}>
             <p>{appointment.location}</p>
-            <p>{appointment.time}</p>
             <p>{appointment.date}</p>
+            <p> Is today?: {
+              moment(appointment.date).isBetween(this.today,this.tomorrow)? 'true': 'false'
+            }</p>
             <button value={appointment.uuid} onClick={this.handleDelete}>Delete</button>
           </div>
         )}
