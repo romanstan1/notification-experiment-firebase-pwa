@@ -61,6 +61,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        hello!
         {this.state.appointments.map((appointment, i) =>
           <div className='appointment' key={i}>
             <p>{appointment.location}</p>
