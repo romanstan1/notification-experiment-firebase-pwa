@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import * as firebase from 'firebase';
 import _ from 'lodash'
-import uuidv1 from 'uuid/v1';
 
 var config = {
   apiKey: process.env.FIREBASE_API_KEY_NOTIFICATION_EXPERIMENT,
@@ -25,14 +24,20 @@ class App extends Component {
     const dbRef = firebase.database().ref('appointments/')
     dbRef.on('value', (snapshot) => {
       const appointments = _.values(snapshot.val());
-      console.log("appointments",appointments)
-      this.setState({appointments})
+      const keys = _.keys(snapshot.val());
+      const addIds = appointments.map((appointment, i) => {
+        return {...appointment,
+        uuid: keys[i]}
+      })
+      this.setState({appointments: addIds})
     })
   }
 
-  writeUserData = () => {
-    const id = uuidv1()
-    firebase.database().ref('appointments/' + id).set({
+  pushUserData = () => {
+    const db = firebase.database()
+    const appointRef = db.ref('appointments/')
+    const newAppointmentRef = appointRef.push();
+    newAppointmentRef.set({
       date: "27/01/2018",
       time: "13.45",
       location: this.state.input,
@@ -43,12 +48,13 @@ class App extends Component {
         lat: 51.4149653,
         lng: -0.2402061999999887
       },
-      placeId: id,
+      placeId: 'whatever',
       type:"Eye test",
       for: "Myself",
       additional:"No additional info",
       phoneNumber: "020 8542 4434",
     });
+
   }
 
   handleInput = (e) => {
@@ -61,17 +67,16 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        hello!
         {this.state.appointments.map((appointment, i) =>
           <div className='appointment' key={i}>
             <p>{appointment.location}</p>
             <p>{appointment.time}</p>
             <p>{appointment.date}</p>
-            <button value={appointment.placeId} onClick={this.handleDelete}>Delete</button>
+            <button value={appointment.uuid} onClick={this.handleDelete}>Delete</button>
           </div>
         )}
         <input type="text" value={this.state.input} onChange={this.handleInput}/>
-        <button onClick={this.writeUserData}>Insert</button>
+        <button onClick={this.pushUserData}>Push</button>
       </div>
     );
   }

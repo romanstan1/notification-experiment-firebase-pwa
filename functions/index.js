@@ -9,21 +9,17 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   console.log("response: ",response)
 });
 
-
 exports.createAppointment = functions.https.onRequest((req, res) => {
-  const id = uuidv1()
-  admin.database().ref('appointments/'+ id).set({
-    date: "7/01/2019",
-    time: "99.45",
-    location: 'FUNCTION APPOINTMENT!',
+  const newAppointmentRef = admin.database().ref('appointments/').push();
+  newAppointmentRef.set({
+    date: "27/01/2018",
+    time: "13.45",
+    location: this.state.input,
     address: "38 The Broadway, Wimbledon, London SW19 1RQ, UK",
     postcode: "SW209BT",
     optician:"John Barnes",
-    homeLocation: {
-      lat: 51.4149653,
-      lng: -0.2402061999999887
-    },
-    placeId: 121,
+    homeLocation: { lat: 51.4149653, lng: -0.2402061999999887 },
+    placeId: 'whatever',
     type:"Eye test",
     for: "Myself",
     additional:"No additional info",
