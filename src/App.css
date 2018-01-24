@@ -1,3 +1,14 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: sans-serif;
+}
+h2 {
+  padding: 20px 0;
+}
 .App, .Shop {
   text-align: center;
 }
@@ -44,11 +55,12 @@
 }
 .browse .imageWrap{
   padding: 10px;
+  font-size: 0;
 }
 .browse .imageWrap img{
   max-width: 220px;
+  font-size: 0;
 }
-
 
 nav {
   height: 50px;

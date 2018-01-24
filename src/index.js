@@ -1,9 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+import { render } from 'react-dom';
+import store, {history} from './store'
+import {Provider} from 'react-redux'
+import { ConnectedRouter } from 'react-router-redux'
+
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import { BrowserRouter } from 'react-router-dom'
 import * as firebase from 'firebase';
 
 const config = {
@@ -17,9 +19,11 @@ const config = {
 
 firebase.initializeApp(config);
 
-ReactDOM.render((
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
-), document.getElementById('root'))
+render(
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      <App/>
+    </ConnectedRouter>
+  </Provider>, document.getElementById('root'));
+
 registerServiceWorker();
