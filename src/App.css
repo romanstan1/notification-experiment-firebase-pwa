@@ -1,13 +1,67 @@
-.App {
+.App, .Shop {
   text-align: center;
 }
 
 .appointment {
-  background: ghostwhite;
   margin: 15px 0;
 }
 
-.appointment p {
+.appointment div p {
   margin: 0;
   padding: 0;
+  text-transform: uppercase;
+  font-size: 14px;
+  text-align: left;
+}
+.appointment div {
+  margin: 0 auto;
+  position: relative;
+  display:inline-block;
+  background: ghostwhite;
+  padding: 10px 50px;
+  width: 40%;
+}
+.appointment div p.location {
+  font-weight: 600;
+  font-size: 16px;
+  padding-bottom: 15px;
+}
+
+.appointment div p.date {
+  padding-bottom: 5px;
+}
+.appointment div p.today {
+  padding-bottom: 5px;
+  color: blue;
+}
+
+.browse {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+.browse .imageWrap{
+  padding: 10px;
+}
+.browse .imageWrap img{
+  max-width: 220px;
+}
+
+
+nav {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid black;
+}
+nav span a{
+  text-decoration: none;
+  color: black;
+  text-transform: uppercase;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 400;
 }
