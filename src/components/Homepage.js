@@ -21,8 +21,7 @@ class Homepage extends Component {
       const appointments = _.values(snapshot.val());
       const keys = _.keys(snapshot.val());
       const addIds = appointments.map((appointment, i) => {
-        return {...appointment,
-        uuid: keys[i]}
+        return {...appointment, uuid: keys[i]}
       })
       this.setState({appointments: addIds})
     })
