@@ -17,7 +17,7 @@ class Homepage extends Component {
     this.tomorrow = moment(time2).endOf('hour')
 
     const dbRef = firebase.database().ref('appointments/')
-    dbRef.on('value', (snapshot) => {
+    dbRef.once('value', (snapshot) => {
       const appointments = _.values(snapshot.val());
       const keys = _.keys(snapshot.val());
       const addIds = appointments.map((appointment, i) => {

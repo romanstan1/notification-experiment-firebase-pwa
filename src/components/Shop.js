@@ -38,6 +38,18 @@ class Shop extends Component {
       const imageNames = _.values(snapshot.val())
       imageNames.forEach(image =>
         storage.ref('glasses/').child(image.fileName).getDownloadURL()
+          .then(url => {
+            console.log("urlL ",url)
+            // This can be downloaded directly:
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = function(event) {
+              var blob = xhr.response;
+            };
+            xhr.open('GET', url);
+            xhr.send();
+            return url
+          })
           .then(url => context.props.dispatch(getImageUrls(url)))
       )
     })

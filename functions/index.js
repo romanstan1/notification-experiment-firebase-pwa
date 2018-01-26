@@ -33,12 +33,6 @@ function pushNotification(upcoming) {
   .catch((error) => console.log("error: ",error));
 }
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  response.send("Hello from Firebase!");
-  console.log("request: ",request)
-  console.log("response: ",response)
-});
-
 exports.createAppointment = functions.https.onRequest((req, res) => {
   const newAppointmentRef = admin.database().ref('appointments/').push();
   newAppointmentRef.set({

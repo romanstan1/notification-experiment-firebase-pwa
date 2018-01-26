@@ -5,8 +5,6 @@ import {Provider} from 'react-redux'
 import { ConnectedRouter } from 'react-router-redux'
 
 import App from './App';
-// import registerServiceWorker from './registerServiceWorker';
-// import registerSW from './registerSW';
 import * as firebase from 'firebase';
 
 const config = {
@@ -26,6 +24,3 @@ render(
       <App/>
     </ConnectedRouter>
   </Provider>, document.getElementById('root'));
-
-// registerServiceWorker();
-// registerSW();
