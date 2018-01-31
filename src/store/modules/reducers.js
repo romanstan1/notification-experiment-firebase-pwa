@@ -1,7 +1,8 @@
 
 
 const initialState = {
-  imageUrls: []
+  imageUrls: [],
+  appointments: []
 }
 
 export default (state=initialState, action)=>{
@@ -10,6 +11,10 @@ export default (state=initialState, action)=>{
       ...state,
       imageUrls: state.imageUrls.includes(action.payload)? state.imageUrls :
         [].concat(state.imageUrls, action.payload)
+    }
+    case 'SET_APPOINTMENTS': return {
+      ...state,
+      appointments: [].concat(action.payload)
     }
     default: return state
   }

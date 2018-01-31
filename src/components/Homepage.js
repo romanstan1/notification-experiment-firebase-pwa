@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import _ from 'lodash'
 import moment from 'moment'
+import {setAppointments} from '../store/modules/actions'
+import {connect} from 'react-redux'
+require("firebase/firestore");
+
 
 class Homepage extends Component {
   state = {
-    appointments: [],
     input:''
   }
 
@@ -16,22 +19,22 @@ class Homepage extends Component {
     this.today = moment(time1).startOf('hour')
     this.tomorrow = moment(time2).endOf('hour')
 
-    const dbRef = firebase.database().ref('appointments/')
-    dbRef.once('value', (snapshot) => {
-      const appointments = _.values(snapshot.val());
-      const keys = _.keys(snapshot.val());
-      const addIds = appointments.map((appointment, i) => {
-        return {...appointment, uuid: keys[i]}
-      })
-      this.setState({appointments: addIds})
+    const fs = firebase.firestore();
+
+    const context = this
+
+    fs.collection("appointments").get().then(snap => {
+      const keys = snap.docs.map(doc => doc.id)
+      const appointments = snap.docs.map(doc => doc.data())
+      const addIds = appointments.map((appointment, i) => { return {...appointment, uuid: keys[i]} })
+      // this.setState({appointments: addIds})
+      this.props.dispatch(setAppointments(addIds))
     })
   }
 
   pushUserData = () => {
-    const db = firebase.database()
-    const appointRef = db.ref('appointments/')
-    const newAppointmentRef = appointRef.push();
-    newAppointmentRef.set({
+    const fs = firebase.firestore();
+    fs.collection("appointments").add({
       date: moment().format(),
       location: this.state.input,
       address: "38 The Broadway, Wimbledon, London SW19 1RQ, UK",
@@ -46,22 +49,26 @@ class Homepage extends Component {
       for: "Myself",
       additional:"No additional info",
       phoneNumber: "020 8542 4434",
-    });
-
+    })
+    .then(docRef => console.log("Document written with ID: ", docRef.id))
+    .catch(error => console.error("Error adding document: ", error))
   }
 
   handleInput = (e) => {
     this.setState({input: e.target.value})
   }
   handleDelete = (e) => {
-    firebase.database().ref('appointments/' + e.target.value).remove()
+    const fs = firebase.firestore();
+    fs.collection("appointments").doc(e.target.value).delete()
+    .then(()=> console.log("Document successfully deleted!"))
+    .catch(error => console.error("Error removing document: ", error));
   }
 
   render() {
     return (
       <div className="App">
         <h2>Appointments</h2>
-        {this.state.appointments.map((appointment, i) =>
+        {this.props.appointments.map((appointment, i) =>
           <div className='appointment' key={i}>
             <div>
               <p className='location'>{appointment.location}</p>
@@ -78,4 +85,6 @@ class Homepage extends Component {
   }
 }
 
-export default Homepage;
+export default connect(state => ({
+  appointments: state.data.appointments
+}))(Homepage)

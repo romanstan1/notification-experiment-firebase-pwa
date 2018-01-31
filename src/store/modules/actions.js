@@ -5,3 +5,9 @@ export const getImageUrls = (url) => {
     payload: url
   })
 }
+export const setAppointments = (appointments) => {
+  return dispatch => dispatch({
+    type: 'SET_APPOINTMENTS',
+    payload: appointments
+  })
+}

@@ -6,8 +6,6 @@ const fetchJson = require('node-fetch-json');
 const fetch = require('node-fetch');
 admin.initializeApp(functions.config().firebase);
 
-
-
 function pushNotification(upcoming) {
 
   const body = {
@@ -52,25 +50,65 @@ exports.createAppointment = functions.https.onRequest((req, res) => {
   res.send("appointment created!");
 });
 
+
+// const dbRef = admin.database().ref('appointments/');
+// dbRef.once('value', (snapshot) => {
+//
+//   const time1 = moment().add(0,'days').format();
+//   const time2 = moment().add(0,'days').format();
+//
+//   const today = moment(time1).startOf('hour');
+//   const tomorrow = moment(time2).endOf('hour');
+//
+//   const appointments = _.values(snapshot.val());
+//   const keys = _.keys(snapshot.val());
+
+
+// const upcomingAppointments = appointments.filter(appot => moment(appot.date).isBetween(today,tomorrow))
+// upcomingAppointments.forEach(upcoming => {
+//   pushNotification(upcoming)
+// })
+
+
 exports.checkAppointments = functions.https.onRequest((req, res) => {
-  const dbRef = admin.database().ref('appointments/');
-  dbRef.once('value', (snapshot) => {
 
-    const time1 = moment().add(0,'days').format();
-    const time2 = moment().add(0,'days').format();
 
-    const today = moment(time1).startOf('hour');
-    const tomorrow = moment(time2).endOf('hour');
 
-    const appointments = _.values(snapshot.val());
-    const keys = _.keys(snapshot.val());
 
-    const upcomingAppointments = appointments.filter(appot => moment(appot.date).isBetween(today,tomorrow))
 
-    upcomingAppointments.forEach(upcoming => {
-      pushNotification(upcoming)
+    const fs = admin.firestore();
+
+    fs.collection("appointments").get().then(snap => {
+      const time1 = moment().add(0,'days').format();
+      const time2 = moment().add(0,'days').format();
+
+      const today = moment(time1).startOf('hour');
+      const tomorrow = moment(time2).endOf('hour');
+
+      const appointments = snap.docs.map(doc => doc.data());
+      const upcomingAppointments = appointments.filter(appot => moment(appot.date).isBetween(today,tomorrow))
+
+      upcomingAppointments.forEach(upcoming => pushNotification(upcoming))
+
+      return res.send(upcomingAppointments);
+    }).catch(error => {
+      console.log("error in firestore:", error)
+      throw error
     })
 
-    res.send(upcomingAppointments);
-  })
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // res.send(upcomingAppointments);
+  // })
 });

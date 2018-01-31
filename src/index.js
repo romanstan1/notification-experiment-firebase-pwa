@@ -1,8 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
-import store, {history} from './store'
+import store, {history, persistor} from './store'
 import {Provider} from 'react-redux'
 import { ConnectedRouter } from 'react-router-redux'
+import { PersistGate } from 'redux-persist/lib/integration/react'
+
 
 import App from './App';
 import * as firebase from 'firebase';
@@ -17,10 +19,13 @@ const config = {
 };
 
 firebase.initializeApp(config);
+firebase.firestore().enablePersistence()
 
+// {/* <PersistGate loading={null} persistor={persistor}> */}
+// {/* </PersistGate> */}
 render(
   <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <App/>
-    </ConnectedRouter>
+      <ConnectedRouter history={history}>
+        <App/>
+      </ConnectedRouter>
   </Provider>, document.getElementById('root'));
